@@ -4,65 +4,95 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>TradingBot Sverige AI</title>
+<title>TradingBot Sverige AI</title>
 
-  <style>
+<style>
 
-    body{
+body{
 
-      margin:0;
+  margin:0;
 
-      font-family:Arial,sans-serif;
+  background:#071126;
 
-      background:#0f172a;
+  color:white;
 
-      color:white;
+  font-family:Arial,sans-serif;
 
-      text-align:center;
+  text-align:center;
 
-      padding:20px;
+  padding:20px;
 
-    }
+}
 
-    h1{color:#22c55e;}
+h1{
 
-    .card{
+  color:#34d399;
 
-      background:#1e293b;
+  font-size:38px;
 
-      padding:20px;
+}
 
-      border-radius:15px;
+.card{
 
-      margin-top:20px;
+  background:#172338;
 
-    }
+  border-radius:20px;
 
-    button{
+  padding:20px;
 
-      background:#22c55e;
+  margin-top:20px;
 
-      color:white;
+}
 
-      border:none;
+.price{
 
-      padding:15px 25px;
+  font-size:42px;
 
-      border-radius:10px;
+  color:#34d399;
 
-      font-size:18px;
+  margin:15px 0;
 
-      cursor:pointer;
+}
 
-    }
+button{
 
-    #signal{font-size:28px;margin-top:20px;font-weight:bold;}
+  background:#22c55e;
 
-  </style>
+  color:white;
+
+  border:none;
+
+  border-radius:12px;
+
+  padding:15px 25px;
+
+  font-size:20px;
+
+}
+
+.signal{
+
+  font-size:32px;
+
+  margin-top:20px;
+
+  font-weight:bold;
+
+}
+
+.time{
+
+  color:#94a3b8;
+
+  margin-top:10px;
+
+}
+
+</style>
 
 </head>
 
@@ -70,37 +100,65 @@
 
 <h1>📈 TradingBot Sverige AI</h1>
 
-<p>AI Demo – Bitcoin signal</p>
+<p>Live Bitcoin + AI Signal</p>
 
 <div class="card">
 
-  <button onclick="startBot()">Starta AI</button>
+  <div>Bitcoin (BTC/USD)</div>
 
-  <div id="signal">Väntar på signal...</div>
+  <div class="price" id="btcPrice">Laddar...</div>
+
+  <button onclick="generateSignal()">Starta AI-analys</button>
+
+  <div class="signal" id="signal">Väntar på signal...</div>
+
+  <div class="time" id="updated"></div>
 
 </div>
 
 <script>
 
-function startBot(){
+async function loadPrice(){
+
+  const url="https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
+
+  const response=await fetch(url);
+
+  const data=await response.json();
+
+  document.getElementById("btcPrice").innerHTML="$"+data.bitcoin.usd.toLocaleString();
+
+  document.getElementById("updated").innerHTML=
+
+    "Uppdaterad: "+new Date().toLocaleTimeString("sv-SE");
+
+}
+
+function generateSignal(){
 
   const signals=[
 
-    '🟢 KÖP BTC',
+    "🟢 KÖP BTC",
 
-    '🔴 SÄLJ BTC',
+    "🔴 SÄLJ BTC",
 
-    '🟡 AVVAKTA',
+    "🟡 AVVAKTA",
 
-    '🟢 KÖP ETH'
+    "🟢 STARK KÖP",
+
+    "🔴 STARK SÄLJ"
 
   ];
 
-  const s=signals[Math.floor(Math.random()*signals.length)];
+  const random=Math.floor(Math.random()*signals.length);
 
-  document.getElementById('signal').innerHTML=s;
+  document.getElementById("signal").innerHTML=signals[random];
 
 }
+
+loadPrice();
+
+setInterval(loadPrice,60000);
 
 </script>
 
